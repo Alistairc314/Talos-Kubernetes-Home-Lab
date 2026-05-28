@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pihole
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pihole
+  namespace: pihole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pihole
+  template:
+    metadata:
+      labels:
+        app: pihole
+    spec:
+      containers:
+      - name: pihole
+        image: pihole/pihole:latest
+        env:
+        - name: TZ
+          value: "Europe/London"
+        - name: WEBPASSWORD
+          value: "changeme"
+        ports:
+        - containerPort: 80
+          name: web
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        - containerPort: 53
+          name: dns-udp
+          protocol: UDP
+        volumeMounts:
+        - name: pihole-etc
+          mountPath: /etc/pihole
+      volumes:
+      - name: pihole-etc
+        hostPath:
+          path: /var/lib/pihole
+          type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pihole-dns
+  namespace: pihole
+  annotations:
+    metallb.io/loadBalancerIPs: 192.168.1.200
+    metallb.io/allow-shared-ip: pihole
+spec:
+  type: LoadBalancer
+  selector:
+    app: pihole
+  ports:
+  - name: dns-tcp
+    port: 53
+    targetPort: 53
+    protocol: TCP
+  - name: dns-udp
+    port: 53
+    targetPort: 53
+    protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pihole-web
+  namespace: pihole
+  annotations:
+    metallb.io/loadBalancerIPs: 192.168.1.200
+    metallb.io/allow-shared-ip: pihole
+spec:
+  type: LoadBalancer
+  selector:
+    app: pihole
+  ports:
+  - name: web
+    port: 80
+    targetPort: 80

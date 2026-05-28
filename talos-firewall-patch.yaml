@@ -1,0 +1,4 @@
+machine:
+  firewall:
+    defaults:
+      action: accept

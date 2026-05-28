@@ -1,0 +1,5 @@
+machine:
+  sysctls:
+    net.ipv4.conf.all.forwarding: "1"
+  network:
+    extraHostEntries: []
