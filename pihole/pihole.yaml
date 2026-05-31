@@ -18,6 +18,8 @@ spec:
       labels:
         app: pihole
     spec:
+      hostNetwork: true                        # ADDED - use host network so Pi-hole sees real client IPs
+      dnsPolicy: ClusterFirstWithHostNet       # CHANGED - required when hostNetwork: true
       containers:
       - name: pihole
         image: pihole/pihole:latest
@@ -26,6 +28,8 @@ spec:
           value: "Europe/London"
         - name: WEBPASSWORD
           value: "changeme"
+        - name: DNSMASQ_LISTENING              # ADDED - listen on all interfaces
+          value: "all"
         ports:
         - containerPort: 80
           name: web
