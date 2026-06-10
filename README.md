@@ -8,9 +8,7 @@ platform for security tooling deployment and network traffic monitoring. Current
 cluster include network-level DNS filtering with full query logging across all home network clients.
 Wazuh SIEM deployment follows the Security+ exam in July 2026 and will run on this infrastructure.
 
-The lab covers Security Architecture and Security Operations domains from CompTIA Security+ SY0-701,
-with direct application to SOC and GRC environments: namespace isolation, RBAC, infrastructure as code,
-and observable workload state.
+This project builds a production-pattern Kubernetes environment on dedicated bare-metal hardware using Talos Linux. The cluster hosts network services and security tooling while providing hands-on experience with Kubernetes administration, immutable infrastructure, RBAC, and observable workload state.
 
 ---
 
@@ -174,9 +172,91 @@ talos-k8s-homelab/
 
 ---
 
-## Next steps
+## Useful Commands
 
-- Deploy Wazuh SIEM on MSI Stealth 16 (VMware) — agents to ship logs from ThinkCentre and home network
-- Network monitoring: Zeek or Suricata on ThinkCentre for traffic analysis alongside DNS filtering
-- GitHub Actions: YAML manifest validation on push
-- Re-enable Pi-hole Homepage widget once fresh v6 app password is generated
+### Cluster health
+
+```bash
+talosctl health
+```
+
+### Nodes
+
+```bash
+kubectl get nodes -o wide
+```
+
+### Pods
+
+```bash
+kubectl get pods -A
+```
+
+### Services
+
+```bash
+kubectl get svc -A
+```
+
+### View pod logs
+
+```bash
+kubectl logs <pod-name>
+```
+
+---
+
+## Skills Demonstrated
+
+- Kubernetes administration
+- Talos Linux
+- Infrastructure as Code
+- RBAC
+- Namespace isolation
+- MetalLB load balancing
+- Persistent storage
+- YAML configuration
+- DNS infrastructure
+- Linux troubleshooting
+- PodSecurity policies
+- Network diagnostics
+- Firewall configuration
+
+---
+
+## Technologies Used
+
+| Technology | Purpose |
+|-------------|---------|
+| Talos Linux 1.13 | Immutable Kubernetes OS |
+| Kubernetes 1.35 | Container orchestration |
+| MetalLB | Bare-metal load balancer |
+| Pi-hole | DNS filtering |
+| Homepage | Service dashboard |
+| kubectl | Cluster management |
+| talosctl | Talos administration |
+
+---
+
+## Security Considerations
+
+- Immutable Talos Linux operating system
+- No SSH access reduces attack surface
+- RBAC used for Homepage API access
+- Namespace separation between workloads
+- PodSecurity admission enforced
+- Declarative infrastructure prevents configuration drift
+
+---
+
+## Next Steps
+
+- Deploy Prometheus and Grafana
+- Implement Loki log aggregation
+- Deploy Wazuh SIEM agents to Kubernetes nodes
+- Configure GitHub Actions manifest validation
+- Introduce FluxCD GitOps
+- Implement Velero backups
+- Deploy Falco runtime security monitoring
+- Add Trivy image scanning
+- Deploy Suricata or Zeek for network monitoring
